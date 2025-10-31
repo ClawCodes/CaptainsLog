@@ -46,6 +46,8 @@ ui/
   record/
   notes/
   friends/
+  profile/
+  note_detail/
   components/ (misc components)
 data/
   api/ (serializable models)
