@@ -4,18 +4,18 @@
 
 **Core flows:**
 
-1. **Record** (press & talk) → audio chunks stream → live transcript appears → stop to finalize.
-2. **Notes** Viewable collection of ntoes and shared notes, organized by group and date.
-3. **Friends** search + add; share a note with selected friends.
-4. **Search** across transcripts search for keywords and provide summary capabilities
+1. **Record** (press & talk) → audio chunks stream → live transcript appears → release to finalize.
+2. **Notes** Viewable collection of notes across 4 tabs: personal, friends, public, for me (shared to me) - sorted by date.
+3. **Friends** search + add a friend, share a note with selected friends, view a friend's profile.
+4. **Search** search across transcripts for keywords and provide summary capabilities.
 
 **High-level architecture:**
 
 * **Android app** → WebSocket to **Ktor API** for auth, streaming upload, and live translation.
-* **Ktor server** → routes audio to **Speech translation service** (ML) for partial/final text
-* **Postgres (+pgvector) service** to persist user, note, and friend data, and support search
-* **Object storage (MinIO)** to persist audio blobs 
-* **LDAP service** to handle user creation and auth
+* **Ktor server** → Routes audio to **Speech translation service** (ML) for partial/final text.
+* **Postgres (+pgvector) service** Persist user, note, and friend data, and support search.
+* **Object storage (MinIO)** Persist audio blobs. 
+* **LDAP service** Handle user creation and auth.
 
 ---
 
@@ -23,11 +23,12 @@
 
 ### 1.1 Screens & navigation
 
-* **LoginScreen** (Enter username, password + login or signup)
-* **RecordScreen** (record button, live transcript, “Go to Notes” button)
-* **NotesScreen** (tabs: My Notes & Shared channels, search friends (jumps to FriendsScreen). Each note contains share button)
-* **FriendsScreen** (search/add)
-* **NoteDetailScreen** (playback + transcript + timestamp)
+* **LoginScreen** (Enter username/password + login/signup)
+* **RecordScreen** (Record button, live transcript, “Go to Notes” button)
+* **NotesScreen** (Pannable tabs: personal, friends, public, for me; search field (filter notes on current tab by keyword))
+* **FriendsScreen** (Search/Add by username)
+* **ProfileScreen** (View selected user's profile and a list of their public notes)
+* **NoteDetailScreen** (playback + transcript + timestamp + share (to pop-up with checklist of friends + share/cancel buttons)
 
 ### 1.2 Permissions & libs
 
@@ -116,6 +117,30 @@ class FriendsViewModel(private val repo: FriendsRepository) : ViewModel() {
   val friends: StateFlow<List<UserDto>>
   fun searchUsers(username: String): Flow<List<UserDto>>
   fun addFriend(username: String)
+}
+
+class ProfileViewModel(
+  private val userRepo: UserRepository,
+  private val notesRepo: NotesRepository
+) : ViewModel() {
+  val selectedUser: StateFlow<UserDto?>
+  val publicNotes: StateFlow<List<NoteDto>>
+  fun loadUserProfile(userId: String)
+  fun refreshNotes()
+}
+
+class NoteDetailViewModel(
+  private val notesRepo: NotesRepository,
+  private val friendsRepo: FriendsRepository
+) : ViewModel() {
+  val note: StateFlow<NoteDto?>
+  val transcript: StateFlow<List<TranscriptSegment>>
+  val isPlaying: StateFlow<Boolean>
+  val friendsList: StateFlow<List<UserDto>>
+  fun loadNoteDetail(noteId: String)
+  fun play()
+  fun pause()
+  fun share(noteId: String, friendIds: List<String>)
 }
 ```
 
