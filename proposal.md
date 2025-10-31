@@ -7,7 +7,7 @@
 1. **Record** (press & talk) → audio chunks stream → live transcript appears → release to finalize.
 2. **Notes** Viewable collection of notes across 4 tabs: personal, friends, public, for me (shared to me) - sorted by date.
 3. **Friends** search + add a friend, share a note with selected friends, view a friend's profile.
-4. **Search** search across transcripts for keywords and provide summary capabilities.
+4. **Search** search across note transcripts for keywords and provide summary capabilities.
 
 **High-level architecture:**
 
@@ -152,6 +152,7 @@ class NoteDetailViewModel(
 class NotesRepository {
   suspend fun myNotes(): List<NoteDto>
   suspend fun sharedNotes(): List<NoteDto>
+  suspend fun publicNotes(): List<NoteDto>
   suspend fun getNote(noteId: String): NoteDto
   suspend fun share(noteId: String, friendIds: List<String>)
   suspend fun search(query: String): List<NoteDto>
@@ -177,9 +178,11 @@ class TranscriptionRepository {
 @Composable fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit)
 @Composable fun RecordScreen(vm: RecordViewModel, onGoToNotes: () -> Unit)
 @Composable fun NotesScreen(vm: NotesViewModel, onOpenNote: (String) -> Unit)
+@Composable fun FriendsScreen(vm: FriendsViewModel, onOpenProfile: (String) -> Unit)
+@Composable fun ProfileScreen(userId: String, vm: ProfileViewModel, onOpenNote: (String) -> Unit, onBack: () -> Unit)
+@Composable fun NoteDetailScreen(noteId: String, vm: NoteDetailViewModel, onBack: () -> Unit)
 @Composable fun FriendsSearchBar(onQuery: (String) -> Unit)
 @Composable fun NoteCard(note: NoteDto, onShare: (String) -> Unit, onOpen: () -> Unit)
-@Composable fun NoteDetailScreen(noteId: String, vm: NotesViewModel, onBack: () -> Unit)
 ```
 
 ### 1.8 Audio streaming
@@ -202,18 +205,33 @@ class TranscriptionRepository {
 
 ```
 POST   /auth/login
+POST   /auth/signup
 POST   /auth/refresh
+POST   /auth/logout
+
 WS     /transcribe
+GET    /audio/{noteId}
+
 POST   /notes
 GET    /notes/my
 GET    /notes/shared
+GET    /notes/public
 GET    /notes/{id}
 POST   /notes/{id}/share
+POST   /notes/{id}/visibility
+PUT    /notes/{id}
+DELETE /notes/{id}
 GET    /notes/search?q=...
-POST   /friends
+
 GET    /friends
+POST   /friends
+DELETE /friends/{id}
+GET    /friends/requests
+POST   /friends/requests/{id}/accept
+
 GET    /users/search?q=...
-GET    /audio/{noteId}
+GET    /users/{id}
+GET    /users/{id}/notes/public
 ```
 
 ### 2.3 Services
