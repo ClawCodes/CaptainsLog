@@ -7,10 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.magnifier
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.captainslog.data.model.AuthViewModel
 import com.example.captainslog.data.model.FriendsViewModel
+import com.example.captainslog.data.model.NotesViewModel
 import com.example.captainslog.data.model.RecordViewModel
 import com.example.captainslog.ui.navigate.AppNavigation
 import com.example.captainslog.ui.theme.CaptainslogTheme
@@ -23,13 +25,16 @@ class MainActivity : ComponentActivity() {
             val authVM by viewModels<AuthViewModel>()
             val recordVM by viewModels<RecordViewModel>()
             val friendVM by viewModels<FriendsViewModel>()
+            val notesVM by viewModels<NotesViewModel>()
+
 
             CaptainslogTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     AppNavigation(
                         authVM = authVM,
                         recordVM = recordVM,
-                        firendVM = friendVM,
+                        friendVM = friendVM,
+                        notesVM = notesVM,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

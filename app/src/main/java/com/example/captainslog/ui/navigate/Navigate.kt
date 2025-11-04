@@ -7,16 +7,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.captainslog.data.model.AuthViewModel
 import com.example.captainslog.data.model.FriendsViewModel
+import com.example.captainslog.data.model.NotesViewModel
 import com.example.captainslog.ui.login.LoginScreen
 import com.example.captainslog.data.model.RecordViewModel
 import com.example.captainslog.ui.friends.FriendsScreen
+import com.example.captainslog.ui.notes.NotesScreen
 import com.example.captainslog.ui.record.RecordScreen
 
 @Composable
 fun AppNavigation(
     authVM: AuthViewModel,
     recordVM: RecordViewModel,
-    firendVM: FriendsViewModel,
+    friendVM: FriendsViewModel,
+    notesVM: NotesViewModel,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -31,16 +34,21 @@ fun AppNavigation(
             })
         }
         composable("record") {
-            // TODO: implement callbacks
             RecordScreen(recordVM, onGoToFriends = {
                 navController.navigate("friendScreen")
             }, onGoToNotes = {
-                println("IMPLEMENT GO TO NOTES!")
+                navController.navigate("notescreen")
             })
         }
         composable ( "friendScreen" ) {
             // TODO: implement onOpenProfile
-            FriendsScreen(firendVM, {}) {
+            FriendsScreen(friendVM, {}) {
+                navController.navigate("record")
+            }
+        }
+        composable ("notescreen"){
+            // TODO: implement onOpenNote
+            NotesScreen(vm = notesVM, onOpenNote = {}){
                 navController.navigate("record")
             }
         }
