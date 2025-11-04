@@ -36,7 +36,7 @@ import com.example.captainslog.data.model.RecordViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecordScreen(vm: RecordViewModel, onGoToNotes: () -> Unit){
+fun RecordScreen(vm: RecordViewModel, onGoToNotes: () -> Unit, onGoToFriends: () -> Unit){
     var isRecording by remember { mutableStateOf(false) }
     // TODO: update transcript to use vm recording methods
     var transcript by remember { mutableStateOf("") }
@@ -47,6 +47,9 @@ fun RecordScreen(vm: RecordViewModel, onGoToNotes: () -> Unit){
             TopAppBar(
                 title = { Text("Recording") },
                 actions = {
+                    TextButton(onClick = onGoToFriends) {
+                        Text("Find friends", color = MaterialTheme.colorScheme.primary)
+                    }
                     TextButton(onClick = onGoToNotes) {
                         Text("Go to Notes", color = MaterialTheme.colorScheme.primary)
                     }
@@ -115,7 +118,7 @@ fun RecordScreenPreview() {
     val fakeVm = RecordViewModel()
 
     MaterialTheme {
-        RecordScreen(vm = fakeVm, onGoToNotes = {})
+        RecordScreen(vm = fakeVm, onGoToFriends = {}, onGoToNotes = {})
     }
 }
 

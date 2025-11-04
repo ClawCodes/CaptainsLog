@@ -28,7 +28,10 @@ fun AppNavigation(
             })
         }
         composable("record") {
-            RecordScreen(recordVM, onGoToNotes = {
+            // TODO: implement callbacks
+            RecordScreen(recordVM, onGoToFriends = {
+                println("IMPLEMENT GO TO FRIENDS!")
+            }, onGoToNotes = {
                 println("IMPLEMENT GO TO NOTES!")
             })
         }
