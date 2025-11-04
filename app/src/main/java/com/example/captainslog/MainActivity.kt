@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.captainslog.data.model.AuthViewModel
+import com.example.captainslog.data.model.FriendsViewModel
 import com.example.captainslog.data.model.RecordViewModel
 import com.example.captainslog.ui.navigate.AppNavigation
 import com.example.captainslog.ui.theme.CaptainslogTheme
@@ -21,11 +22,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             val authVM by viewModels<AuthViewModel>()
             val recordVM by viewModels<RecordViewModel>()
+            val friendVM by viewModels<FriendsViewModel>()
+
             CaptainslogTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     AppNavigation(
                         authVM = authVM,
                         recordVM = recordVM,
+                        firendVM = friendVM,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

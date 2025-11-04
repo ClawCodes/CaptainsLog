@@ -20,7 +20,7 @@ import com.example.captainslog.data.model.FriendsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-
+// TODO: Add go back call back to return to recording screen
 @Composable
 fun FriendsScreen(vm: FriendsViewModel, onOpenProfile: (String) -> Unit){
     var searchQuery by remember { mutableStateOf("") }
