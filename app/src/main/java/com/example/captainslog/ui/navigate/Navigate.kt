@@ -39,7 +39,10 @@ fun AppNavigation(
             })
         }
         composable ( "friendScreen" ) {
-            FriendsScreen(firendVM) { }
+            // TODO: implement onOpenProfile
+            FriendsScreen(firendVM, {}) {
+                navController.navigate("record")
+            }
         }
     }
 }

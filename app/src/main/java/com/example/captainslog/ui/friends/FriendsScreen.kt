@@ -1,17 +1,24 @@
 package com.example.captainslog.ui.friends
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,7 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 // TODO: Add go back call back to return to recording screen
 @Composable
-fun FriendsScreen(vm: FriendsViewModel, onOpenProfile: (String) -> Unit){
+fun FriendsScreen(vm: FriendsViewModel, onOpenProfile: (String) -> Unit, onExit: () -> Unit){
     var searchQuery by remember { mutableStateOf("") }
 
     // Example state flows you might have from your ViewModel
@@ -34,11 +41,26 @@ fun FriendsScreen(vm: FriendsViewModel, onOpenProfile: (String) -> Unit){
 
     Scaffold(
         topBar = {
-            FriendsSearchBar(onQuery = { query ->
-                searchQuery = query
-                // TODO: add search functionality
-//                vm.searchFriends(query)
-            })
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Exit button
+                Button(onClick = onExit) {
+                    Text("Home")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                // Search bar takes up most of the space
+                FriendsSearchBar(
+                    onQuery = { query ->
+                        searchQuery = query
+                        // TODO: add search functionality
+                        // vm.searchFriends(query)
+                    }
+                )
+            }
         }
     ) { padding ->
         LazyColumn(
@@ -83,7 +105,7 @@ fun FriendsScreenPreview() {
     }
 
     MaterialTheme {
-        FriendsScreen(vm = fakeVm, onOpenProfile = {})
+        FriendsScreen(vm = fakeVm, onOpenProfile = {}, onExit = {})
     }
 }
 
