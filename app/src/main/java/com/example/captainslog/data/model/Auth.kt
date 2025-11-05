@@ -1,12 +1,15 @@
 package com.example.captainslog.data.model
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.StateFlow
+import com.example.captainslog.data.api.FakeDataFactory
+import com.example.captainslog.data.api.UserDto
 
 class AuthViewModel() : ViewModel() {
-    // TODO: decide if uiState is necessary for PoC
-//    val uiState: StateFlow<AuthState>
-    fun login(username: String, password: String) {}
+    lateinit var user: UserDto
+    fun login(username: String, password: String) {
+        user = FakeDataFactory.createUser()
+        user.displayName = username
+    }
     fun create(username: String, password: String) {}
     fun logout() {}
 }

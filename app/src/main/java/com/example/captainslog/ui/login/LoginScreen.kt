@@ -25,7 +25,7 @@ import com.example.captainslog.data.model.AuthViewModel
 
 // TODO: Add use of vm
 @Composable
-fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit){
+fun LoginScreen(vm: AuthViewModel, onLoggedIn: (String, String) -> Unit){
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -67,7 +67,7 @@ fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit){
 
         // Login button
         Button(
-            onClick = { onLoggedIn() },
+            onClick = { onLoggedIn(username, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
@@ -77,7 +77,7 @@ fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit){
 
         // Sign up button
         OutlinedButton(
-            onClick = { onLoggedIn() },
+            onClick = { onLoggedIn(username, password) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Sign Up")
@@ -92,6 +92,6 @@ fun LoginScreenPreview() {
     val fakeVm = AuthViewModel()
 
     MaterialTheme {
-        LoginScreen(vm = fakeVm, onLoggedIn = {})
+        LoginScreen(vm = fakeVm, onLoggedIn = { _, _ -> })
     }
 }

@@ -1,5 +1,7 @@
 package com.example.captainslog.ui.friends
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,15 +29,23 @@ import com.example.captainslog.data.model.FriendsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-// TODO: Add go back call back to return to recording screen
-@Composable
-fun FriendsScreen(vm: FriendsViewModel, onOpenProfile: (String) -> Unit, onExit: () -> Unit){
-    var searchQuery by remember { mutableStateOf("") }
 
-    // Example state flows you might have from your ViewModel
+private enum class Caption(val label: String) {
+    FRIENDS("My Friends"),
+    NOT_FRIENDS("Add Friend"),
+}
+
+@Composable
+fun FriendsScreen(vm: FriendsViewModel, onOpenProfile: (UserDto) -> Unit, onExit: () -> Unit){
+    var searchQuery by remember { mutableStateOf("") }
+    var caption by remember { mutableStateOf(Caption.FRIENDS.label) }
+
     val friends by vm.friends.collectAsState()
-    // TODO: Replace with results from VM
-    val searchResults by vm.searchResults.collectAsState()
+    val searchResults by vm.userSearchResults.collectAsState() // Users that are NOT fiends
+
+    if (searchResults.isNotEmpty()){
+        caption = Caption.NOT_FRIENDS.label
+    }
 
     val listToShow = if (searchQuery.isNotEmpty()) searchResults else friends
 
@@ -56,24 +66,34 @@ fun FriendsScreen(vm: FriendsViewModel, onOpenProfile: (String) -> Unit, onExit:
                 FriendsSearchBar(
                     onQuery = { query ->
                         searchQuery = query
-                        // TODO: add search functionality
-                        // vm.searchFriends(query)
+                        vm.searchUsers(query)
                     }
                 )
             }
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+        Column(
+            modifier = Modifier.fillMaxSize().padding(padding)
         ) {
-            items(listToShow) { friend ->
-                Friend(
-                    friend = friend,
-                    onOpenProfile = onOpenProfile
-                )
+            Text(
+                text = caption,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                items(listToShow) { friend ->
+                    Friend(
+                        friend = friend,
+                        onOpenProfile = { onOpenProfile(friend) }
+                    )
+                }
             }
         }
     }
@@ -94,11 +114,11 @@ fun FriendsScreenPreview() {
         )
         override val friends: StateFlow<List<UserDto>> = _friends
 
-        private val _searchResults = MutableStateFlow<List<UserDto>>(emptyList())
-        override val searchResults: StateFlow<List<UserDto>> = _searchResults
+        private val _friendSearchResults = MutableStateFlow<List<UserDto>>(emptyList())
+        override val friendSearchResults: StateFlow<List<UserDto>> = _friendSearchResults
 
         fun searchFriends(query: String) {
-            _searchResults.value = _friends.value.filter {
+            _friendSearchResults.value = _friends.value.filter {
                 it.displayName.contains(query, ignoreCase = true)
             }
         }

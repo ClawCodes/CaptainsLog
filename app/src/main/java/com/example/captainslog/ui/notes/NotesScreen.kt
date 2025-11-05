@@ -26,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.captainslog.data.api.FakeDataFactory
 import com.example.captainslog.data.api.NoteDto
 import com.example.captainslog.data.api.testNote
 import com.example.captainslog.data.model.NotesViewModel

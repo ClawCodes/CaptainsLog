@@ -10,9 +10,14 @@ import com.example.captainslog.data.model.FriendsViewModel
 import com.example.captainslog.data.model.NotesViewModel
 import com.example.captainslog.ui.login.LoginScreen
 import com.example.captainslog.data.model.RecordViewModel
+import com.example.captainslog.ui.friends.FriendDetailScreen
 import com.example.captainslog.ui.friends.FriendsScreen
 import com.example.captainslog.ui.notes.NotesScreen
 import com.example.captainslog.ui.record.RecordScreen
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import android.net.Uri
+import com.example.captainslog.data.api.UserDto
 
 @Composable
 fun AppNavigation(
@@ -29,9 +34,10 @@ fun AppNavigation(
         startDestination = "login"
     ) {
         composable("login") {
-            LoginScreen(authVM, onLoggedIn = {
+            LoginScreen(authVM){ username, password ->
+                authVM.login(username, password)
                 navController.navigate("record")
-            })
+            }
         }
         composable("record") {
             RecordScreen(recordVM, onGoToFriends = {
@@ -42,7 +48,10 @@ fun AppNavigation(
         }
         composable ( "friendScreen" ) {
             // TODO: implement onOpenProfile
-            FriendsScreen(friendVM, {}) {
+            FriendsScreen(friendVM, { user ->
+                val userJson = Uri.encode(Json.encodeToString(user))
+                navController.navigate("friendDetail/$userJson")
+            }) {
                 navController.navigate("record")
             }
         }
@@ -51,6 +60,16 @@ fun AppNavigation(
             NotesScreen(vm = notesVM, onOpenNote = {}){
                 navController.navigate("record")
             }
+        }
+        composable ("friendDetail/{userJson}"){ entry ->
+            val userJson = entry.arguments?.getString("userJson") ?: return@composable
+            val user = Json.decodeFromString<UserDto>(Uri.decode(userJson))
+
+            FriendDetailScreen(
+                user = user,
+                accessorVM = friendVM,
+                onExit = { navController.popBackStack() }
+            )
         }
     }
 }
