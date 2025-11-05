@@ -27,21 +27,21 @@ class NotesRepository {
         _otherNotes.value = initialOthers
     }
 
-    suspend fun myNotes(): List<NoteDto> {
+    fun myNotes(): List<NoteDto> {
         return myNotes.value
     }
-    suspend fun sharedNotes(): List<NoteDto> {
+    fun sharedNotes(): List<NoteDto> {
         return sharedNotes.value
     }
-    suspend fun publicNotes(): List<NoteDto> {
+    fun publicNotes(): List<NoteDto> {
         return otherNotes.value
     }
-    suspend fun getNote(noteId: String): NoteDto {
+    fun getNote(noteId: String): NoteDto {
         return TODO("Provide the return value")
     }
-    suspend fun share(noteId: String, friendIds: List<String>) {}
+    fun share(noteId: String, friendIds: List<String>) {}
 
-    suspend fun search(query: String): List<NoteDto> {
+    fun search(query: String): List<NoteDto> {
         return TODO("Provide the return value")
     }
 
