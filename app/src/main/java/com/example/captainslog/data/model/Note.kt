@@ -12,6 +12,7 @@ open class NotesViewModel() : ViewModel() {
     open val myNotes: StateFlow<List<NoteDto>> = MutableStateFlow(emptyList())
     open val sharedNotes: StateFlow<List<NoteDto>> = MutableStateFlow(emptyList())
     open val publicNotes: StateFlow<List<NoteDto>> = MutableStateFlow(emptyList())
+
     fun refresh() {}
     fun search(query: String): Flow<List<NoteDto>> {
         return TODO("Provide the return value")
