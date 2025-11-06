@@ -57,7 +57,9 @@ fun AppNavigation(
         }
         composable ("notescreen"){
             // TODO: implement onOpenNote
-            NotesScreen(vm = notesVM, onOpenNote = {}){
+            NotesScreen(vm = notesVM, friendVM, onOpenNote = {
+                println("TODO: IMPLEMENT OPEN NOTE!!!!!")
+            }){
                 navController.navigate("record")
             }
         }

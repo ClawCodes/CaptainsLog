@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.captainslog.data.api.NoteDto
 import com.example.captainslog.data.api.testNote
+import com.example.captainslog.data.model.FriendsViewModel
 import com.example.captainslog.data.model.NotesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,9 +40,12 @@ enum class NotesTab(val label: String) {
 }
 
 @Composable
-fun NotesScreen(vm: NotesViewModel, onOpenNote: (String) -> Unit, onExit: () -> Unit){
+fun NotesScreen(vm: NotesViewModel, friendVM: FriendsViewModel, onOpenNote: (String) -> Unit, onExit: () -> Unit){
     var selectedTab by remember { mutableStateOf(NotesTab.MY_NOTES) }
     var searchQuery by remember { mutableStateOf("") }
+
+    var showShareDialog by remember { mutableStateOf(false) }
+    var noteToShare by remember { mutableStateOf<NoteDto?>(null) }
 
     val myNotes by vm.myNotes.collectAsState()
     val sharedNotes by vm.sharedNotes.collectAsState()
@@ -105,11 +109,25 @@ fun NotesScreen(vm: NotesViewModel, onOpenNote: (String) -> Unit, onExit: () -> 
                 items(filteredNotes) { note ->
                     NoteCard(
                         note = note,
-                        // TODO: Add vm call to share notes
-                        onShare = { noteId -> {println("SHARE NOTE")} },
+                        onShare = { noteId ->
+                            noteToShare = note
+                            showShareDialog = true
+                        },
                         onOpen = { onOpenNote(note.id) }
                     )
                 }
+            }
+            if (showShareDialog && noteToShare != null) {
+                val friends by friendVM.friends.collectAsState()
+
+                ShareNoteDialog(
+                    friends = friends,
+                    onDismiss = { showShareDialog = false },
+                    onConfirmShare = { selectedFriends ->
+                        showShareDialog = false
+                        noteToShare = null
+                    }
+                )
             }
         }
     }
@@ -144,6 +162,6 @@ fun NotesScreenPreview() {
     }
 
     MaterialTheme {
-        NotesScreen(vm = localModel(), onOpenNote = {}, onExit = {})
+        NotesScreen(vm = localModel(), FriendsViewModel(), onOpenNote = {}, onExit = {})
     }
 }
