@@ -124,7 +124,6 @@ fun NotesScreen(vm: NotesViewModel, friendVM: FriendsViewModel, onOpenNote: (Str
                     friends = friends,
                     onDismiss = { showShareDialog = false },
                     onConfirmShare = { selectedFriends ->
-                        println("Sharing ${noteToShare!!.id} with: ${selectedFriends.map { it.displayName }}")
                         showShareDialog = false
                         noteToShare = null
                     }
