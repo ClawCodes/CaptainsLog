@@ -40,7 +40,7 @@ fun AppNavigation(
             }
         }
         composable("record") {
-            RecordScreen(recordVM, onGoToFriends = {
+            RecordScreen(recordVM, notesVM,onGoToFriends = {
                 navController.navigate("friendScreen")
             }, onGoToNotes = {
                 navController.navigate("notescreen")
@@ -57,7 +57,9 @@ fun AppNavigation(
         }
         composable ("notescreen"){
             // TODO: implement onOpenNote
-            NotesScreen(vm = notesVM, onOpenNote = {}){
+            NotesScreen(vm = notesVM, friendVM, onOpenNote = {
+                println("TODO: IMPLEMENT OPEN NOTE!!!!!")
+            }){
                 navController.navigate("record")
             }
         }

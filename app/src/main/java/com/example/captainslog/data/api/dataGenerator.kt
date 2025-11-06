@@ -11,7 +11,7 @@ object FakeDataFactory {
     private val faker = Faker()
     private val usedIds = mutableSetOf<String>()
 
-    private fun uniqueId(): String {
+    fun uniqueId(): String {
         var id: String
         do {
             id = UUID.randomUUID().toString()
@@ -34,6 +34,13 @@ object FakeDataFactory {
         return testNote(
             id = uniqueId(),
             transcript = createSentence()
+        )
+    }
+
+    fun createNoteFromTranscript(input: String): NoteDto {
+        return testNote(
+            id = uniqueId(),
+            transcript = input
         )
     }
 }

@@ -2,6 +2,7 @@ package com.example.captainslog.data.repo
 
 import com.example.captainslog.data.api.FakeDataFactory
 import com.example.captainslog.data.api.NoteDto
+import com.example.captainslog.data.api.testNote
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -37,15 +38,18 @@ class NotesRepository {
         return otherNotes.value
     }
     suspend fun getNote(noteId: String): NoteDto {
-        return TODO("Provide the return value")
+        val allNotes = myNotes.value + sharedNotes.value + otherNotes.value
+        return allNotes.find { it.id == noteId } ?: throw Exception("Note not found")
     }
-    suspend fun share(noteId: String, friendIds: List<String>) {}
+    suspend fun share(noteId: String, friendIds: List<String>) {
+
+    }
 
     suspend fun search(query: String): List<NoteDto> {
         return TODO("Provide the return value")
     }
 
-    fun createNote(transcript: String){
-        // Create noteDto and add to _myNotes
+    fun createNote(note: NoteDto){
+        _myNotes.value = _myNotes.value + note
     }
 }
