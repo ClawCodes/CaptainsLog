@@ -40,7 +40,7 @@ fun AppNavigation(
             }
         }
         composable("record") {
-            RecordScreen(recordVM, onGoToFriends = {
+            RecordScreen(recordVM, notesVM,onGoToFriends = {
                 navController.navigate("friendScreen")
             }, onGoToNotes = {
                 navController.navigate("notescreen")

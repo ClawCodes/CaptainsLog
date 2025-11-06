@@ -2,6 +2,7 @@ package com.example.captainslog.data.repo
 
 import com.example.captainslog.data.api.FakeDataFactory
 import com.example.captainslog.data.api.NoteDto
+import com.example.captainslog.data.api.testNote
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -27,25 +28,28 @@ class NotesRepository {
         _otherNotes.value = initialOthers
     }
 
-    fun myNotes(): List<NoteDto> {
+    suspend fun myNotes(): List<NoteDto> {
         return myNotes.value
     }
-    fun sharedNotes(): List<NoteDto> {
+    suspend fun sharedNotes(): List<NoteDto> {
         return sharedNotes.value
     }
-    fun publicNotes(): List<NoteDto> {
+    suspend fun publicNotes(): List<NoteDto> {
         return otherNotes.value
     }
-    fun getNote(noteId: String): NoteDto {
+    suspend fun getNote(noteId: String): NoteDto {
+        val allNotes = myNotes.value + sharedNotes.value + otherNotes.value
+        return allNotes.find { it.id == noteId } ?: throw Exception("Note not found")
+    }
+    suspend fun share(noteId: String, friendIds: List<String>) {
+
+    }
+
+    suspend fun search(query: String): List<NoteDto> {
         return TODO("Provide the return value")
     }
-    fun share(noteId: String, friendIds: List<String>) {}
 
-    fun search(query: String): List<NoteDto> {
-        return TODO("Provide the return value")
-    }
-
-    fun createNote(transcript: String){
-        // Create noteDto and add to _myNotes
+    fun createNote(note: NoteDto){
+        _myNotes.value = _myNotes.value + note
     }
 }

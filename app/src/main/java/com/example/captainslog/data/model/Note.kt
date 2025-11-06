@@ -18,4 +18,7 @@ open class NotesViewModel() : ViewModel() {
         return TODO("Provide the return value")
     }
     fun share(noteId: String, friendIds: List<String>) {}
+    fun addNote(note: NoteDto) {
+        repo.createNote(note)
+    }
 }
